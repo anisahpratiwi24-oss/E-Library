@@ -1,0 +1,1076 @@
+<!doctype doctype>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Library SMA Negeri Mojoagung</title>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Garamond', serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2f4a 50%, #0f1c2e 100%);
+            color: #e8d5b5;
+            overflow-x: hidden;
+            min-height: 100%;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        .page {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Animated Background Elements */
+        .floating-books {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .book-particle {
+            position: absolute;
+            width: 30px;
+            height: 40px;
+            background: linear-gradient(45deg, #d4af37, #f4e4c1);
+            opacity: 0.1;
+            animation: floatBook 15s infinite ease-in-out;
+            border-radius: 2px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        @keyframes floatBook {
+            0%, 100% { transform: translateY(100%) rotate(0deg); }
+            50% { transform: translateY(-100%) rotate(180deg); }
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        /* Home Page */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .library-title {
+            font-size: 4rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #d4af37, #f4e4c1, #c0c0c0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .library-subtitle {
+            font-size: 1.3rem;
+            color: #b8a68c;
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(26, 47, 74, 0.8), rgba(15, 28, 46, 0.9));
+            border: 2px solid #d4af37;
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.4);
+            border-color: #f4e4c1;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.6));
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .feature-desc {
+            color: #b8a68c;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #d4af37, #f4e4c1);
+            color: #0a1628;
+            border: none;
+            padding: 1.2rem 3rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.6);
+        }
+
+        .cta-button:active {
+            animation: glow 0.5s ease;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 15px 40px rgba(212, 175, 55, 0.6); }
+            50% { box-shadow: 0 0 60px rgba(212, 175, 55, 1), 0 0 100px rgba(212, 175, 55, 0.8); }
+        }
+
+        .contact-info {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(26, 47, 74, 0.5);
+            border-radius: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .contact-phone {
+            font-size: 1.2rem;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .school-address {
+            color: #b8a68c;
+            font-style: italic;
+        }
+
+        /* Login Page */
+        .login-container {
+            background: linear-gradient(135deg, rgba(26, 47, 74, 0.95), rgba(15, 28, 46, 0.98));
+            border: 3px solid #d4af37;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #d4af37, #f4e4c1, #c0c0c0, #d4af37);
+            background-size: 200% 100%;
+            animation: shimmerLine 3s linear infinite;
+        }
+
+        @keyframes shimmerLine {
+            to { background-position: 200% 0; }
+        }
+
+        .login-title {
+            font-size: 2.5rem;
+            color: #d4af37;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: #f4e4c1;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(15, 28, 46, 0.8);
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            border-radius: 10px;
+            color: #e8d5b5;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .login-button {
+            width: 100%;
+            background: linear-gradient(135deg, #d4af37, #f4e4c1);
+            color: #0a1628;
+            border: none;
+            padding: 1.2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.5);
+        }
+
+        .login-button:active {
+            animation: glow 0.5s ease;
+        }
+
+        /* Book Collection Page */
+        .collection-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .collection-title {
+            font-size: 3rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .book-card {
+            background: linear-gradient(135deg, rgba(26, 47, 74, 0.9), rgba(15, 28, 46, 0.95));
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            border-radius: 15px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .book-card:hover::after {
+            left: 100%;
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px);
+            border-color: #d4af37;
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
+        }
+
+        .book-icon {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
+        }
+
+        .book-title {
+            font-size: 1.2rem;
+            color: #f4e4c1;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .book-author {
+            color: #b8a68c;
+            text-align: center;
+            margin-bottom: 0.8rem;
+            font-style: italic;
+        }
+
+        .book-features {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .feature-badge {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+        }
+
+        .book-preview {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(10, 22, 40, 0.98);
+            padding: 1rem;
+            border-top: 2px solid #d4af37;
+            opacity: 0;
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+
+        .book-card:hover .book-preview {
+            top: 0;
+            opacity: 1;
+        }
+
+        .preview-title {
+            color: #d4af37;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .preview-text {
+            color: #b8a68c;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Reading Page */
+        .reading-container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .reading-header {
+            background: rgba(26, 47, 74, 0.9);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: 2px solid rgba(212, 175, 55, 0.5);
+        }
+
+        .current-book-title {
+            font-size: 2rem;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+        }
+
+        .current-book-author {
+            color: #b8a68c;
+            font-style: italic;
+        }
+
+        .reading-content {
+            background: rgba(26, 47, 74, 0.8);
+            padding: 3rem;
+            border-radius: 15px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .reading-tools {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .tool-button {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(244, 228, 193, 0.2));
+            color: #d4af37;
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .tool-button:hover {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.5), rgba(244, 228, 193, 0.3));
+            border-color: #d4af37;
+            transform: translateY(-2px);
+        }
+
+        .tool-button:active {
+            animation: glow 0.5s ease;
+        }
+
+        /* Reward Popup */
+        .reward-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .reward-popup {
+            background: linear-gradient(135deg, rgba(26, 47, 74, 0.98), rgba(15, 28, 46, 0.98));
+            border: 3px solid #d4af37;
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            max-width: 500px;
+            position: relative;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .seal {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #dc143c, #8b0000);
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(220, 20, 60, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .seal::after {
+            content: '🏆';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+        }
+
+        .reward-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .reward-title {
+            font-size: 2rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+        }
+
+        .reward-stats {
+            color: #b8a68c;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .close-reward {
+            background: linear-gradient(135deg, #d4af37, #f4e4c1);
+            color: #0a1628;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .close-reward:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.5);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .nav-button {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .nav-button:hover {
+            background: rgba(212, 175, 55, 0.3);
+            border-color: #d4af37;
+            transform: translateY(-2px);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .library-title {
+                font-size: 2.5rem;
+            }
+
+            .library-subtitle {
+                font-size: 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .books-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .reading-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="floating-books" id="floatingBooks"></div><!-- Home Page -->
+  <div class="page" id="homePage">
+   <div class="content-wrapper">
+    <div class="hero-section">
+     <h1 class="library-title" id="libraryTitle">E-Library SMA Negeri Mojoagung</h1>
+     <p class="library-subtitle" id="librarySubtitle">Akses koleksi novel dan cerita pendek secara digital</p>
+    </div>
+    <div class="features-grid">
+     <div class="feature-card">
+      <div class="feature-icon">
+       🧠
+      </div>
+      <h3 class="feature-title">Mesin Ringkas Pintar</h3>
+      <p class="feature-desc">Ringkasan otomatis yang akurat dengan highlight kalimat penting untuk pemahaman cepat</p>
+     </div>
+     <div class="feature-card">
+      <div class="feature-icon">
+       📝
+      </div>
+      <h3 class="feature-title">Catatan Pintar</h3>
+      <p class="feature-desc">Sistem mendeteksi ide utama dan istilah penting, menyusun catatan otomatis untuk Anda</p>
+     </div>
+     <div class="feature-card">
+      <div class="feature-icon">
+       🎯
+      </div>
+      <h3 class="feature-title">Kurasi Akademis</h3>
+      <p class="feature-desc">Rekomendasi buku berdasarkan genre, kebiasaan membaca, dan pola aktivitas Anda</p>
+     </div>
+     <div class="feature-card">
+      <div class="feature-icon">
+       📊
+      </div>
+      <h3 class="feature-title">Pelacak Perkembangan</h3>
+      <p class="feature-desc">Analisis waktu dan kecepatan baca dengan insight pemahaman harian dan mingguan</p>
+     </div>
+     <div class="feature-card">
+      <div class="feature-icon">
+       🎁
+      </div>
+      <h3 class="feature-title">Reading Reward</h3>
+      <p class="feature-desc">Dapatkan reward simbolik: ice cream (15 menit), yoghurt (30 menit), smoothies (60 menit)</p>
+     </div>
+     <div class="feature-card">
+      <div class="feature-icon">
+       🌙
+      </div>
+      <h3 class="feature-title">Mode Fokus Otomatis</h3>
+      <p class="feature-desc">Antarmuka yang menyesuaikan untuk pengalaman membaca yang lebih fokus dan nyaman</p>
+     </div>
+    </div>
+    <div style="text-align: center;"><button class="cta-button" id="startReadingBtn"> <span id="startReadingText">Mulai Membaca</span> </button>
+    </div>
+    <div class="contact-info">
+     <div class="contact-phone" id="contactPhone">
+      📞 083875126221
+     </div>
+     <div class="school-address" id="schoolAddress">
+      📍 Jl. Janti No.18 Mojoagung, Jombang, Jawa Timur
+     </div>
+    </div>
+   </div>
+  </div><!-- Login Page -->
+  <div class="page hidden" id="loginPage">
+   <div class="content-wrapper">
+    <div class="login-container">
+     <h2 class="login-title">Masuk ke Perpustakaan</h2>
+     <form id="loginForm">
+      <div class="form-group"><label class="form-label" for="username">Nama Lengkap</label> <input type="text" id="username" class="form-input" placeholder="Contoh: Anisah Pratiwi" required>
+      </div>
+      <div class="form-group"><label class="form-label" for="userClass">Kelas</label> <input type="text" id="userClass" class="form-input" placeholder="Contoh: XI-3" required>
+      </div><button type="submit" class="login-button" id="loginButton"> <span id="loginButtonText">Masuk ke Perpustakaan</span> </button>
+     </form>
+     <div class="nav-buttons"><button class="nav-button" id="backToHomeBtn">Kembali</button>
+     </div>
+    </div>
+   </div>
+  </div><!-- Book Collection Page -->
+  <div class="page hidden" id="collectionPage">
+   <div class="content-wrapper">
+    <div class="collection-header">
+     <h2 class="collection-title">Koleksi Digital</h2>
+     <p style="color: #b8a68c; font-style: italic;">Pilih buku untuk memulai petualangan literasi Anda</p>
+    </div>
+    <div class="books-grid" id="booksGrid"></div>
+    <div class="nav-buttons"><button class="nav-button" id="logoutBtn">Keluar</button>
+    </div>
+   </div>
+  </div><!-- Reading Page -->
+  <div class="page hidden" id="readingPage">
+   <div class="content-wrapper">
+    <div class="reading-container">
+     <div class="reading-header">
+      <h3 class="current-book-title" id="currentBookTitle"></h3>
+      <p class="current-book-author" id="currentBookAuthor"></p>
+     </div>
+     <div class="reading-content" id="readingContent"></div>
+     <div class="reading-tools"><button class="tool-button" id="summaryBtn">📋 Ringkasan Pintar</button> <button class="tool-button" id="notesBtn">📝 Catatan Otomatis</button> <button class="tool-button" id="progressBtn">📊 Perkembangan</button>
+     </div>
+     <div class="nav-buttons"><button class="nav-button" id="backToCollectionBtn">Kembali ke Koleksi</button>
+     </div>
+    </div>
+   </div>
+  </div><!-- Reward Popup -->
+  <div class="reward-overlay" id="rewardOverlay">
+   <div class="reward-popup">
+    <div class="seal"></div>
+    <div class="reward-icon" id="rewardIcon"></div>
+    <h3 class="reward-title" id="rewardTitle"></h3>
+    <div class="reward-stats" id="rewardStats"></div><button class="close-reward" id="closeRewardBtn">Lanjutkan Membaca</button>
+   </div>
+  </div>
+  <script>
+        const defaultConfig = {
+            library_title: "E-Library SMA Negeri Mojoagung",
+            library_subtitle: "Akses koleksi novel dan cerita pendek secara digital",
+            contact_phone: "083875126221",
+            school_address: "Jl. Janti No.18 Mojoagung, Jombang, Jawa Timur",
+            start_reading_button: "Mulai Membaca",
+            login_button: "Masuk ke Perpustakaan",
+            background_color: "#0a1628",
+            accent_color: "#d4af37",
+            text_color: "#e8d5b5",
+            button_color: "#d4af37",
+            secondary_color: "#1a2f4a",
+            font_family: "Georgia",
+            font_size: 16
+        };
+
+        const books = [
+            { title: "Ayah", author: "Andrea Hirata", icon: "📚", preview: "Kisah perjalanan spiritual seorang ayah yang mengajarkan nilai-nilai kehidupan mendalam" },
+            { title: "Hujan", author: "Tere Liye", icon: "🌧", preview: "Petualangan penuh misteri tentang kehilangan, harapan, dan kekuatan cinta" },
+            { title: "Tentang Kamu", author: "Tere Liye", icon: "💝", preview: "Cerita mengharukan tentang cinta, pengorbanan, dan takdir dua insan" },
+            { title: "Perahu Kertas", author: "Dewi Lestari", icon: "⛵", preview: "Kisah romantis dua jiwa yang dipertemukan oleh seni dan mimpi" },
+            { title: "Supernova", author: "Dewi Lestari", icon: "✨", preview: "Petualangan filosofis tentang cinta, alam semesta, dan pencarian makna hidup" },
+            { title: "Tunggu Aku di Batavia", author: "Ni Ketut Yuni Suastini", icon: "🏛", preview: "Kisah cinta epik di tengah pergolakan sejarah Indonesia" },
+            { title: "Dilan 1990", author: "Pidi Baiq", icon: "💕", preview: "Kisah cinta legendaris anak SMA di Bandung tahun 1990-an" },
+            { title: "Cantik Itu Luka", author: "Eka Kurniawan", icon: "🌹", preview: "Epos magis tentang keluarga, sejarah, dan tragedi yang memukau" },
+            { title: "Bumi Manusia", author: "Pramoedya Ananta Toer", icon: "🌏", preview: "Karya monumental tentang perjuangan dan kebangkitan pemikiran" },
+            { title: "Dahlan", author: "Haidar Musyafa", icon: "🕌", preview: "Biografi inspiratif pendiri Muhammadiyah yang visioner" },
+            { title: "Negeri 5 Menara", author: "Ahmad Fuadi", icon: "🕌", preview: "Kisah persahabatan dan perjuangan meraih mimpi di pesantren" },
+            { title: "Tenggelamnya Kapal Van Der Wijck", author: "Buya Hamka", icon: "🚢", preview: "Tragedi cinta klasik yang melampaui batas budaya dan waktu" },
+            { title: "Harry Potter", author: "J.K. Rowling", icon: "⚡", preview: "Petualangan magis anak penyihir melawan kekuatan kegelapan" },
+            { title: "Critical Eleven", author: "Ika Natassa", icon: "✈", preview: "Kisah cinta modern tentang pilihan hidup dan takdir" },
+            { title: "The Bride", author: "Julie Garwood", icon: "👑", preview: "Roman sejarah tentang cinta yang melampaui perbedaan klan" },
+            { title: "Cerpen Siswa SMAN Mojoagung", author: "Siswa SMAN Mojoagung", icon: "✍", preview: "Kumpulan cerita pendek karya siswa berbakat SMAN Mojoagung" }
+        ];
+
+        let currentUser = null;
+        let readingStartTime = null;
+        let readingTimer = null;
+        let currentBook = null;
+
+        // Create floating book particles
+        function createFloatingBooks() {
+            const container = document.getElementById('floatingBooks');
+            for (let i = 0; i < 15; i++) {
+                const book = document.createElement('div');
+                book.className = 'book-particle';
+                book.style.left = ${Math.random() * 100}%;
+                book.style.animationDelay = ${Math.random() * 15}s;
+                book.style.animationDuration = ${10 + Math.random() * 10}s;
+                container.appendChild(book);
+            }
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+
+        function renderBooks() {
+            const grid = document.getElementById('booksGrid');
+            grid.innerHTML = books.map(book => `
+                <div class="book-card" data-title="${book.title}" data-author="${book.author}">
+                    <div class="book-icon">${book.icon}</div>
+                    <div class="book-title">${book.title}</div>
+                    <div class="book-author">oleh ${book.author}</div>
+                    <div class="book-features">
+                        <span class="feature-badge">Ringkasan</span>
+                        <span class="feature-badge">Catatan</span>
+                        <span class="feature-badge">Analisis</span>
+                    </div>
+                    <div class="book-preview">
+                        <div class="preview-title">Preview:</div>
+                        <div class="preview-text">${book.preview}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.book-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const title = card.dataset.title;
+                    const author = card.dataset.author;
+                    startReading(title, author);
+                });
+            });
+        }
+
+        function startReading(title, author) {
+            currentBook = { title, author };
+            document.getElementById('currentBookTitle').textContent = title;
+            document.getElementById('currentBookAuthor').textContent = oleh ${author};
+            
+            document.getElementById('readingContent').innerHTML = `
+                <p style="margin-bottom: 1.5rem;">Anda sedang membaca <strong>${title}</strong> karya ${author}. Fitur kecerdasan aktif untuk membantu pemahaman Anda:</p>
+                <p style="margin-bottom: 1.5rem;">• <strong>Ringkasan Pintar</strong> - Ekstraksi otomatis poin-poin kunci dari setiap bab</p>
+                <p style="margin-bottom: 1.5rem;">• <strong>Catatan Otomatis</strong> - Identifikasi konsep penting dan terminologi khusus</p>
+                <p style="margin-bottom: 1.5rem;">• <strong>Analisis Perkembangan</strong> - Pelacakan kecepatan dan waktu membaca Anda</p>
+                <p style="margin-bottom: 1.5rem; font-style: italic; color: #d4af37;">Timer membaca tersembunyi telah aktif. Baca dengan tenang, reward akan muncul secara otomatis!</p>
+            `;
+
+            readingStartTime = Date.now();
+            startReadingTimer();
+            showPage('readingPage');
+        }
+
+        function startReadingTimer() {
+            if (readingTimer) clearInterval(readingTimer);
+            
+            readingTimer = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - readingStartTime) / 1000 / 60);
+                
+                if (elapsed === 15 || elapsed === 30 || elapsed === 60) {
+                    showReward(elapsed);
+                    clearInterval(readingTimer);
+                }
+            }, 1000);
+        }
+
+        function showReward(minutes) {
+            const rewards = {
+                15: { icon: '🍦', title: 'Ice Cream Reward!', message: 'Luar biasa! Anda telah membaca selama 15 menit' },
+                30: { icon: '🥛', title: 'Yoghurt Reward!', message: 'Hebat! Anda telah membaca selama 30 menit' },
+                60: { icon: '🥤', title: 'Smoothies Reward!', message: 'Fantastis! Anda telah membaca selama 1 jam penuh!' }
+            };
+
+            const reward = rewards[minutes];
+            document.getElementById('rewardIcon').textContent = reward.icon;
+            document.getElementById('rewardTitle').textContent = reward.title;
+            document.getElementById('rewardStats').innerHTML = `
+                ${reward.message}<br>
+                <strong>Buku:</strong> ${currentBook.title}<br>
+                <strong>Waktu Membaca:</strong> ${minutes} menit<br>
+                <strong>Status:</strong> Pembaca Aktif
+            `;
+
+            document.getElementById('rewardOverlay').style.display = 'flex';
+        }
+
+        // Event Listeners
+        document.getElementById('startReadingBtn').addEventListener('click', () => {
+            showPage('loginPage');
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const userClass = document.getElementById('userClass').value.trim();
+            
+            if (username && userClass) {
+                currentUser = { username, class: userClass };
+                
+                const result = await window.dataSdk.create({
+                    id: Date.now().toString(),
+                    username: username,
+                    class: userClass,
+                    reading_time: 0,
+                    books_read: 0,
+                    current_book: "",
+                    last_login: new Date().toISOString(),
+                    notes: "",
+                    rewards: ""
+                });
+
+                if (result.isOk) {
+                    renderBooks();
+                    showPage('collectionPage');
+                } else {
+                    alert('Gagal menyimpan data. Silakan coba lagi.');
+                }
+            }
+        });
+
+        document.getElementById('backToHomeBtn').addEventListener('click', () => {
+            showPage('homePage');
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            currentUser = null;
+            showPage('homePage');
+        });
+
+        document.getElementById('backToCollectionBtn').addEventListener('click', () => {
+            if (readingTimer) clearInterval(readingTimer);
+            showPage('collectionPage');
+        });
+
+        document.getElementById('closeRewardBtn').addEventListener('click', () => {
+            document.getElementById('rewardOverlay').style.display = 'none';
+            startReadingTimer();
+        });
+
+        document.getElementById('summaryBtn').addEventListener('click', () => {
+            alert('Fitur Ringkasan Pintar: Menganalisis teks dan menampilkan poin-poin kunci dari bacaan Anda.');
+        });
+
+        document.getElementById('notesBtn').addEventListener('click', () => {
+            alert('Fitur Catatan Otomatis: Mendeteksi istilah penting dan konsep utama untuk catatan Anda.');
+        });
+
+        document.getElementById('progressBtn').addEventListener('click', () => {
+            alert('Fitur Pelacak Perkembangan: Menampilkan statistik waktu baca dan kecepatan pemahaman Anda.');
+        });
+
+        // Element SDK Implementation
+        async function onConfigChange(config) {
+            const titleElement = document.getElementById('libraryTitle');
+            const subtitleElement = document.getElementById('librarySubtitle');
+            const phoneElement = document.getElementById('contactPhone');
+            const addressElement = document.getElementById('schoolAddress');
+            const startBtnText = document.getElementById('startReadingText');
+            const loginBtnText = document.getElementById('loginButtonText');
+
+            if (titleElement) titleElement.textContent = config.library_title || defaultConfig.library_title;
+            if (subtitleElement) subtitleElement.textContent = config.library_subtitle || defaultConfig.library_subtitle;
+            if (phoneElement) phoneElement.textContent = 📞 ${config.contact_phone || defaultConfig.contact_phone};
+            if (addressElement) addressElement.textContent = 📍 ${config.school_address || defaultConfig.school_address};
+            if (startBtnText) startBtnText.textContent = config.start_reading_button || defaultConfig.start_reading_button;
+            if (loginBtnText) loginBtnText.textContent = config.login_button || defaultConfig.login_button;
+
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseSize = config.font_size || defaultConfig.font_size;
+
+            document.body.style.fontFamily = ${customFont}, Georgia, Garamond, serif;
+            document.documentElement.style.fontSize = ${baseSize}px;
+
+            const bgColor = config.background_color || defaultConfig.background_color;
+            const accentColor = config.accent_color || defaultConfig.accent_color;
+            const textColor = config.text_color || defaultConfig.text_color;
+
+            document.body.style.background = linear-gradient(135deg, ${bgColor} 0%, ${config.secondary_color || defaultConfig.secondary_color} 50%, ${bgColor} 100%);
+            
+            document.querySelectorAll('.library-title, .collection-title, .current-book-title, .feature-title, .login-title, .reward-title').forEach(el => {
+                el.style.color = accentColor;
+            });
+
+            document.querySelectorAll('.feature-card, .book-card, .login-container').forEach(el => {
+                el.style.borderColor = accentColor;
+            });
+        }
+
+        const dataHandler = {
+            onDataChanged(data) {
+                console.log('Data updated:', data.length, 'records');
+            }
+        };
+
+        // Initialize SDKs
+        (async function() {
+            const dataResult = await window.dataSdk.init(dataHandler);
+            if (!dataResult.isOk) {
+                console.error("Failed to initialize Data SDK");
+            }
+
+            if (window.elementSdk) {
+                window.elementSdk.init({
+                    defaultConfig,
+                    onConfigChange,
+                    mapToCapabilities: (config) => ({
+                        recolorables: [
+                            {
+                                get: () => config.background_color || defaultConfig.background_color,
+                                set: (value) => {
+                                    config.background_color = value;
+                                    window.elementSdk.setConfig({ background_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.secondary_color || defaultConfig.secondary_color,
+                                set: (value) => {
+                                    config.secondary_color = value;
+                                    window.elementSdk.setConfig({ secondary_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.text_color || defaultConfig.text_color,
+                                set: (value) => {
+                                    config.text_color = value;
+                                    window.elementSdk.setConfig({ text_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.accent_color || defaultConfig.accent_color,
+                                set: (value) => {
+                                    config.accent_color = value;
+                                    window.elementSdk.setConfig({ accent_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.button_color || defaultConfig.button_color,
+                                set: (value) => {
+                                    config.button_color = value;
+                                    window.elementSdk.setConfig({ button_color: value });
+                                }
+                            }
+                        ],
+                        borderables: [],
+                        fontEditable: {
+                            get: () => config.font_family || defaultConfig.font_family,
+                            set: (value) => {
+                                config.font_family = value;
+                                window.elementSdk.setConfig({ font_family: value });
+                            }
+                        },
+                        fontSizeable: {
+                            get: () => config.font_size || defaultConfig.font_size,
+                            set: (value) => {
+                                config.font_size = value;
+                                window.elementSdk.setConfig({ font_size: value });
+                            }
+                        }
+                    }),
+                    mapToEditPanelValues: (config) => new Map([
+                        ["library_title", config.library_title || defaultConfig.library_title],
+                        ["library_subtitle", config.library_subtitle || defaultConfig.library_subtitle],
+                        ["contact_phone", config.contact_phone || defaultConfig.contact_phone],
+                        ["school_address", config.school_address || defaultConfig.school_address],
+                        ["start_reading_button", config.start_reading_button || defaultConfig.start_reading_button],
+                        ["login_button", config.login_button || defaultConfig.login_button]
+                    ])
+                });
+            }
+
+            createFloatingBooks();
+        })();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a0d3da9431a602c',t:'MTc2MzUyOTQ0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
